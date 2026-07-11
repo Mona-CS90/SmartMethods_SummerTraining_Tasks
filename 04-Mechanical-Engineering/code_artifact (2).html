@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تصميم الكلب الروبوتي القياسي ثلاثي الأبعاد</title>
+    <!-- Tailwind CSS for clean and modern dashboard UI -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Three.js and OrbitControls for 3D Viewport -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Cairo Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #050811;
+            overflow-x: hidden;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b1120;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0ea5e9;
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col lg:flex-row select-none">
+
+    <!-- RIGHT SIDE: Clean Info Panel answering the 8 points directly -->
+    <div class="w-full lg:w-[48%] bg-slate-900/95 border-l border-slate-800 p-6 flex flex-col justify-between overflow-y-auto max-h-screen shadow-2xl z-10">
+        
+        <!-- Header -->
+        <div class="mb-5 border-b border-slate-800 pb-4">
+            <div class="flex items-center justify-between">
+                <span class="bg-sky-500/10 text-sky-400 text-xs font-bold px-3 py-1 rounded-full border border-sky-500/20">
+                    <i class="fa-solid fa-microchip ml-1"></i> تصميم الكلب الروبوتي (12 DOF)
+                </span>
+                <span class="text-[11px] text-slate-400 font-mono">الأساسيات الميكانيكية</span>
+            </div>
+            <h1 class="text-xl font-black text-slate-100 mt-2 flex items-center gap-2">
+                <i class="fa-solid fa-dog text-sky-400"></i>
+                إجابات نقاط التصميم المطلوبة
+            </h1>
+            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                هنا الإجابات المباشرة والواضحة للأسئلة الثمانية الميكانيكية لتصميم وبناء الكلب الروبوتي رباعي الأرجل بأسلوب علمي ومقاسات دقيقة.
+            </p>
+        </div>
+
+        <!-- Tabbed Navigation answering the 8 Slide points -->
+        <div class="grid grid-cols-4 gap-1.5 mb-5">
+            <button onclick="switchTab(1)" id="tab-btn-1" class="tab-btn bg-sky-600 text-white text-[11px] font-bold py-2 px-1 rounded-lg transition-all duration-200 shadow-md">
+                ١. الهيكل
+            </button>
+            <button onclick="switchTab(2)" id="tab-btn-2" class="tab-btn bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold py-2 px-1 rounded-lg transition-all duration-200">
+                ٢. الأرجل
+            </button>
+            <button onclick="switchTab(3)" id="tab-btn-3" class="tab-btn bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold py-2 px-1 rounded-lg transition-all duration-200">
+                ٣. المفاصل
+            </button>
+            <button onclick="switchTab(4)" id="tab-btn-4" class="tab-btn bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold py-2 px-1 rounded-lg transition-all duration-200">
+                ٤. المحركات
+            </button>
+            <button onclick="switchTab(5)" id="tab-btn-5" class="tab-btn bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold py-2 px-1 rounded-lg transition-all duration-200 mt-1.5">
+                ٥. العزم
+            </button>
+            <button onclick="switchTab(6)" id="tab-btn-6" class="tab-btn bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold py-2 px-1 rounded-lg transition-all duration-200 mt-1.5">
+                ٦. الثبات
+            </button>
+            <button onclick="switchTab(7)" id="tab-btn-7" class="tab-btn bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold py-2 px-1 rounded-lg transition-all duration-200 mt-1.5">
+                ٧. المشي
+            </button>
+            <button onclick="switchTab(8)" id="tab-btn-8" class="tab-btn bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold py-2 px-1 rounded-lg transition-all duration-200 mt-1.5">
+                ٨. المشاكل
+            </button>
+        </div>
+
+        <!-- Tab Contents displaying simple and direct explanations -->
+        <div class="flex-grow bg-slate-950/90 rounded-2xl border border-slate-800 p-5 mb-5 min-h-[380px]">
+            
+            <!-- Tab 1: Body Chassis -->
+            <div id="tab-content-1" class="tab-content space-y-3">
+                <h3 class="text-sm font-bold text-sky-400 flex items-center gap-2">
+                    <i class="fa-solid fa-cube"></i> ١. شكل الجسم والهيكل (Body & Chassis)
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    تم تصميم الجسم الرئيسي على شكل **صندوق صلب ومستقر (Box)** ليكون متوازناً وسهل التصنيع والتركيب:
+                </p>
+                <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800/80 text-xs space-y-2 text-slate-400">
+                    <p><strong class="text-slate-200">الأبعاد الميكانيكية المقترحة:</strong> طول 140 ملم × عرض 70 ملم × ارتفاع 30 ملم.</p>
+                    <p><strong class="text-slate-200">توزيع الوزن:</strong> يتم وضع المكونات الداخلية الثقيلة (مثل البطارية) في أسفل الهيكل لضمان بقاء مركز الجاذبية في المنتصف ومنخفضاً.</p>
+                    <p><strong class="text-slate-200">فتحات التثبيت:</strong> يحتوي الهيكل على فتحات بمقاس 23 × 12 ملم لتثبيت محركات السيرفو عند الزوايا بصلابة تامة.</p>
+                </div>
+            </div>
+
+            <!-- Tab 2: Leg Design -->
+            <div id="tab-content-2" class="tab-content hidden space-y-3">
+                <h3 class="text-sm font-bold text-sky-400 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-nodes"></i> ٢. تصميم الأرجل ومقاومة الانزلاق
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    تعتمد كل رجل على قطعتين أساسيتين متصلتين بمفصل لضمان المرونة وامتصاص الصدمات:
+                </p>
+                <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800/80 text-xs space-y-2 text-slate-400">
+                    <p><strong class="text-slate-200">عظم الفخذ (Femur):</strong> قطعة علوية بطول 50 ملم متصلة بمحرك الورك الفردي.</p>
+                    <p><strong class="text-slate-200">عظم الساق (Tibia):</strong> قطعة سفلية بطول 50 ملم متصلة بمفصل الركبة.</p>
+                    <p><strong class="text-slate-200">حماية من الانزلاق:</strong> نهاية الساق مزودة بقاعدة دائرية مغلفة بالمطاط لضمان احتكاك قوي على الأرض الملساء لمنع الانزلاق وتأمين الثبات.</p>
+                </div>
+            </div>
+
+            <!-- Tab 3: Joints & DOF -->
+            <div id="tab-content-3" class="tab-content hidden space-y-3">
+                <h3 class="text-sm font-bold text-sky-400 flex items-center gap-2">
+                    <i class="fa-solid fa-arrows-spin"></i> ٣. عدد المفاصل ودرجات الحرية (Degrees of Freedom)
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    يعتمد الروبوت على **12 درجة حرية نشطة (12 DOF)** تمنحه القدرة الكاملة على المشي، الدوران والالتفاف:
+                </p>
+                <table class="w-full text-right text-[11px] text-slate-400">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-slate-200 font-bold">
+                            <th class="pb-1.5">المفصل</th>
+                            <th class="pb-1.5 text-center">درجات الحرية</th>
+                            <th class="pb-1.5">الوظيفة الميكانيكية</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-900">
+                        <tr>
+                            <td class="py-1.5 text-slate-300 font-semibold">مفصل الالتفاف (Hip Roll)</td>
+                            <td class="py-1.5 text-center text-sky-400 font-bold">4 (1 لكل رجل)</td>
+                            <td class="py-1.5">الحركة الجانبية للالتفاف والدوران يميناً ويساراً.</td>
+                        </tr>
+                        <tr>
+                            <td class="py-1.5 text-slate-300 font-semibold">مفصل الفخذ (Hip Pitch)</td>
+                            <td class="py-1.5 text-center text-sky-400 font-bold">4 (1 لكل رجل)</td>
+                            <td class="py-1.5">تأمين حركة السير والتقدم للأمام والخلف.</td>
+                        </tr>
+                        <tr>
+                            <td class="py-1.5 text-slate-300 font-semibold">مفصل الركبة (Knee Pitch)</td>
+                            <td class="py-1.5 text-center text-sky-400 font-bold">4 (1 لكل رجل)</td>
+                            <td class="py-1.5">التحكم بارتفاع الجسم وامتصاص صدمات الحركة.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tab 4: Motor Selection -->
+            <div id="tab-content-4" class="tab-content hidden space-y-3">
+                <h3 class="text-sm font-bold text-sky-400 flex items-center gap-2">
+                    <i class="fa-solid fa-gears"></i> ٤. اختيار المحركات والتحمل
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    بناءً على الوزن الإجمالي المتوقع للروبوت، تم اختيار محركات السيرفو المناسبة ميكانيكياً:
+                </p>
+                <div class="grid grid-cols-2 gap-3 text-xs">
+                    <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                        <span class="text-sky-400 font-bold block mb-1">المحرك القياسي: MG90S</span>
+                        <p class="text-[11px] text-slate-400">يحتوي على تروس معدنية بالكامل، بعزم دوران يبلغ **2.2 kg·cm**. ممتاز جداً ويتحمل الصدمات والاهتزازات أثناء المشي.</p>
+                    </div>
+                    <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                        <span class="text-amber-400 font-bold block mb-1">المحرك البديل: SG90</span>
+                        <p class="text-[11px] text-slate-400">تروس بلاستيكية، عزم **1.8 kg·cm**. مناسب للتجارب البسيطة جداً والخفيفة، لكنه سريع التآكل مقارنة بـ MG90S ذو التروس المعدنية.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 5: Torque Calculation -->
+            <div id="tab-content-5" class="tab-content hidden space-y-3">
+                <h3 class="text-sm font-bold text-sky-400 flex items-center gap-2">
+                    <i class="fa-solid fa-calculator"></i> ٥. حساب العزم المبدئي لمفصل الفخذ (حاسبة تفاعلية)
+                </h3>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
+                    تم ضبط القيم الافتراضية هنا لتطابق تماماً تفاصيل وأبعاد الروبوت المطلوبة في الشريحة (وزن ٥٠٠ جم وطول ذراع ٥٠ ملم):
+                </p>
+                
+                <!-- Dynamic Interactive Calculator inside Sidebar -->
+                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 space-y-2.5 text-xs">
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-[11px] text-slate-300">
+                            <span>الوزن الإجمالي للروبوت (جم):</span>
+                            <span id="calc-weight-val" class="font-mono text-sky-400 font-bold">500 جم</span>
+                        </div>
+                        <input id="slider-weight" type="range" min="100" max="2000" value="500" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-sky-500">
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-[11px] text-slate-300">
+                            <span>طول ذراع الرفع/المفصل (ملم):</span>
+                            <span id="calc-leg-val" class="font-mono text-sky-400 font-bold">50 ملم</span>
+                        </div>
+                        <input id="slider-leg" type="range" min="10" max="150" value="50" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-sky-500">
+                    </div>
+                    <div class="h-px bg-slate-800"></div>
+                    <div class="space-y-1 text-slate-400 text-[10px] font-mono leading-relaxed">
+                        <p>القانون المستخدم: العزم = القوة على الرجل × طول ذراع الرفع</p>
+                        <p>القوة على الرجل الداعمة (عند مشية الهرولة): <span id="formula-force" class="text-slate-200">2.45 N</span></p>
+                    </div>
+                    <div class="bg-sky-950/40 p-2.5 rounded border border-sky-500/30 text-center">
+                        <span class="text-[10px] block text-sky-300">العزم المطلوب للمفصل:</span>
+                        <span id="calculated-torque" class="text-sm font-extrabold text-sky-400 font-mono">1.25 kg·cm</span>
+                    </div>
+                    <p class="text-[10px] text-slate-400 text-center">
+                        مقارنة بمحرك SG90 (1.8 kg·cm): هامش الأمان يبلغ <span id="safety-factor" class="text-emerald-400 font-bold">44%</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tab 6: Stability & COG -->
+            <div id="tab-content-6" class="tab-content hidden space-y-3">
+                <h3 class="text-sm font-bold text-sky-400 flex items-center gap-2">
+                    <i class="fa-solid fa-scale-balanced"></i> ٦. الثبات ومركز الجاذبية
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    يعتمد اتزان الكلب الروبوتي على إبقاء مركز ثقل الجسم داخل مساحة تلامس الأرجل مع الأرض:
+                </p>
+                <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800/80 text-xs space-y-2 text-slate-400">
+                    <p><strong class="text-slate-200">مركز الجاذبية المنخفض:</strong> يتم بوضع القطع الثقيلة كالبطارية ولوحة التحكم في أسفل تجويف الهيكل لزيادة ثبات الروبوت ومنعه من الانقلاب أثناء الوقوف أو السير.</p>
+                    <p><strong class="text-slate-200">مساحة الدعم الميكانيكي:</strong> عند الحركة أو الوقوف، يجب أن يظل مسقط مركز الثقل داخل المساحة المحصورة بين أقدام الروبوت الملامسة للأرض.</p>
+                </div>
+            </div>
+
+            <!-- Tab 7: Walking Gait -->
+            <div id="tab-content-7" class="tab-content hidden space-y-3">
+                <h3 class="text-sm font-bold text-sky-400 flex items-center gap-2">
+                    <i class="fa-solid fa-shoe-prints"></i> ٧. طريقة المشي المقترحة (Trot Gait)
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    المشية المثالية والأنسب للروبوت رباعي الأرجل هي **مشية الهرولة (Trot Gait)**:
+                </p>
+                <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800/80 text-xs space-y-2 text-slate-400">
+                    <p><strong class="text-slate-200">آلية المشي:</strong> تتحرك الأرجل بشكل قطري متبادل (الرجل الأمامية اليمنى مع الخلفية اليسرى معاً، ثم الزوج المقابل).</p>
+                    <p><strong class="text-slate-200">لماذا هذه المشية؟</strong> توفر سرعة جيدة جداً، توازناً ديناميكياً ممتازاً أثناء التقدم للأمام، وتتطلب حوسبة برمجية أبسط وأكثر ثباتاً مقارنة بالمشيات المعقدة.</p>
+                </div>
+            </div>
+
+            <!-- Tab 8: Mechanical Problems -->
+            <div id="tab-content-8" class="tab-content hidden space-y-3">
+                <h3 class="text-sm font-bold text-sky-400 flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation"></i> ٨. المشاكل الميكانيكية المتوقعة وحلولها
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    أبرز التحديات الميكانيكية والحلول المباشرة لتفاديها أثناء التصنيع الفعلي:
+                </p>
+                <div class="space-y-2 text-[11px] overflow-y-auto max-h-[190px] pr-1">
+                    <div class="border-r-2 border-sky-500 pr-2 bg-slate-900/40 p-2 rounded">
+                        <strong class="text-slate-200 block">المشكلة: انزلاق الأقدام على الأسطح الناعمة</strong>
+                        <span class="text-slate-400">الحل: وضع قطع من المطاط أو السيليكون عالي الاحتكاك أسفل أطراف الأرجل لزيادة التماسك.</span>
+                    </div>
+                    <div class="border-r-2 border-sky-500 pr-2 bg-slate-900/40 p-2 rounded">
+                        <strong class="text-slate-200 block">المشكلة: تآكل تروس المحركات</strong>
+                        <span class="text-slate-400">الحل: استخدام محركات تروس معدنية بالكامل (Metal Gears) مثل MG90S بدلاً من تروس البلاستيك سريعة التآكل.</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Interactive Dashboard Controllers -->
+        <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-3 shadow-inner">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">لوحة تحريك الروبوت التفاعلية</span>
+            
+            <div class="grid grid-cols-2 gap-2">
+                <button id="btn-toggle-walk" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition duration-200 flex items-center justify-center gap-1.5 shadow-lg shadow-sky-500/10">
+                    <i class="fa-solid fa-person-walking"></i> تشغيل المشية
+                </button>
+                <button id="btn-toggle-dims" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 px-3 rounded-xl text-xs transition duration-200 flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-ruler-combined"></i> أبعاد الروبوت
+                </button>
+            </div>
+
+            <button id="btn-reset-view" class="w-full bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold py-2 px-3 rounded-xl text-xs transition duration-200 flex items-center justify-center gap-1">
+                <i class="fa-solid fa-arrows-rotate"></i> إعادة ضبط زاوية الكاميرا
+            </button>
+        </div>
+
+    </div>
+
+    <!-- LEFT SIDE: Responsive WebGL 3D Viewport -->
+    <div class="flex-grow h-[480px] lg:h-screen relative">
+        <div id="canvas-container" class="w-full h-full"></div>
+
+        <!-- Technical status overlay -->
+        <div class="absolute bottom-6 left-6 bg-slate-900/95 backdrop-blur border border-slate-800 px-4 py-2.5 rounded-2xl flex items-center gap-2.5 shadow-2xl">
+            <span class="w-2.5 h-2.5 rounded-full bg-sky-500 animate-pulse"></span>
+            <span id="hud-text" class="text-xs text-slate-200">استخدم الماوس لتدوير الكلب الروبوتي 360 درجة، وانقر على التبويبات للتوجيه التلقائي!</span>
+        </div>
+    </div>
+
+    <script>
+        let scene, camera, renderer, controls;
+        let robotGroup, dimensionsGroup;
+        
+        // Storing active parts for trot gait animation
+        let legFR_Hip, legFR_Knee;
+        let legFL_Hip, legFL_Knee;
+        let legBR_Hip, legBR_Knee;
+        let legBL_Hip, legBL_Knee;
+        let headMesh, bodyMesh;
+
+        // Dynamic System States
+        let isWalking = false;
+        let showDimensions = false;
+        let walkTime = 0;
+
+        function init() {
+            const container = document.getElementById('canvas-container');
+            
+            // Create Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x060813);
+            scene.fog = new THREE.FogExp2(0x060813, 0.0015);
+            
+            // Camera configuration
+            camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 1, 1000);
+            camera.position.set(160, 100, 160);
+            
+            // Renderer Configuration
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.0;
+            container.appendChild(renderer.domElement);
+            
+            // OrbitControls for viewing flexibility
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.maxPolarAngle = Math.PI / 2 - 0.05; // Stop under-grid panning
+            controls.minDistance = 60;
+            controls.maxDistance = 350;
+            controls.target.set(0, 10, 0);
+
+            // Lighting Setup
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.45);
+            scene.add(ambientLight);
+            
+            const dirLight = new THREE.DirectionalLight(0xffffff, 1.1);
+            dirLight.position.set(100, 160, 80);
+            dirLight.castShadow = true;
+            dirLight.shadow.mapSize.width = 2048;
+            dirLight.shadow.mapSize.height = 2048;
+            dirLight.shadow.camera.near = 10;
+            dirLight.shadow.camera.far = 400;
+            const d = 150;
+            dirLight.shadow.camera.left = -d;
+            dirLight.shadow.camera.right = d;
+            dirLight.shadow.camera.top = d;
+            dirLight.shadow.camera.bottom = -d;
+            scene.add(dirLight);
+
+            // Cyberpunk Blue Accent Light
+            const blueLight = new THREE.PointLight(0x0ea5e9, 2.0, 250);
+            blueLight.position.set(-80, 60, -80);
+            scene.add(blueLight);
+
+            // Warm Orange Industrial Light
+            const orangeLight = new THREE.PointLight(0xf97316, 1.5, 200);
+            orangeLight.position.set(80, 50, 80);
+            scene.add(orangeLight);
+            
+            // Floor Grid Helper
+            const gridHelper = new THREE.GridHelper(300, 30, 0x1e293b, 0x0f172a);
+            gridHelper.position.y = -50;
+            scene.add(gridHelper);
+            
+            const floorGeo = new THREE.PlaneGeometry(1000, 1000);
+            const floorMat = new THREE.MeshStandardMaterial({ 
+                color: 0x04060d, 
+                roughness: 0.9,
+                metalness: 0.1
+            });
+            const floor = new THREE.Mesh(floorGeo, floorMat);
+            floor.rotation.x = -Math.PI / 2;
+            floor.position.y = -50;
+            floor.receiveShadow = true;
+            scene.add(floor);
+
+            buildStandardRobotDog();
+            setupHUD();
+            recalculateTorque();
+            
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function buildStandardRobotDog() {
+            robotGroup = new THREE.Group();
+            dimensionsGroup = new THREE.Group();
+            dimensionsGroup.visible = false;
+            robotGroup.add(dimensionsGroup);
+
+            // Metallic Industrial Materials
+            const metalChassisMaterial = new THREE.MeshStandardMaterial({
+                color: 0x334155, // Slate blue-gray industrial metal
+                roughness: 0.35,
+                metalness: 0.8
+            });
+
+            const accentOrangeMaterial = new THREE.MeshStandardMaterial({
+                color: 0xf97316, // High-vis industrial orange
+                roughness: 0.4,
+                metalness: 0.5
+            });
+
+            const silverLegsMaterial = new THREE.MeshStandardMaterial({
+                color: 0xcbd5e1, // Silver aluminum
+                roughness: 0.25,
+                metalness: 0.9
+            });
+
+            const darkCarbonMaterial = new THREE.MeshStandardMaterial({
+                color: 0x1e293b, // Dark carbon / rubber
+                roughness: 0.5,
+                metalness: 0.7
+            });
+
+            const ledVisorMaterial = new THREE.MeshBasicMaterial({
+                color: 0x38bdf8 // Glowing Cyan
+            });
+
+            // 1. MAIN CHASSIS (الهيكل الرئيسي - 140x70x30 mm)
+            const bodyGeo = new THREE.BoxGeometry(140, 30, 70);
+            bodyMesh = new THREE.Mesh(bodyGeo, metalChassisMaterial);
+            bodyMesh.position.y = 5;
+            bodyMesh.castShadow = true;
+            bodyMesh.receiveShadow = true;
+            robotGroup.add(bodyMesh);
+
+            // Glowing stripe down the spine representing electronic core
+            const spineGlowGeo = new THREE.BoxGeometry(110, 3, 4);
+            const spineGlow = new THREE.Mesh(spineGlowGeo, ledVisorMaterial);
+            spineGlow.position.set(0, 15.1, 0);
+            bodyMesh.add(spineGlow);
+
+            // Side carbon fiber plating
+            const sidePanelGeo = new THREE.BoxGeometry(100, 20, 72.5);
+            const sidePanel = new THREE.Mesh(sidePanelGeo, darkCarbonMaterial);
+            bodyMesh.add(sidePanel);
+
+            // 2. CYBERNETIC SENSOR HEAD (الرأس المستشعر)
+            headMesh = new THREE.Group();
+            headMesh.position.set(80, 20, 0); // Front mounted
+            
+            const neckBracket = new THREE.Mesh(new THREE.BoxGeometry(20, 15, 20), darkCarbonMaterial);
+            neckBracket.position.set(-15, -10, 0);
+            headMesh.add(neckBracket);
+
+            const headCore = new THREE.Mesh(new THREE.BoxGeometry(35, 30, 35), metalChassisMaterial);
+            headCore.castShadow = true;
+            headMesh.add(headCore);
+
+            const lidarLens = new THREE.Mesh(new THREE.BoxGeometry(5, 8, 26), ledVisorMaterial);
+            lidarLens.position.set(17.6, 3, 0);
+            headMesh.add(lidarLens);
+
+            bodyMesh.add(headMesh);
+
+            // 3. THE 4 ARTICULATED 12-DOF LEGS (الأرجل الأربع المفصلية)
+            const offsets = [
+                { id: "FL", x: 50, z: 42, color: silverLegsMaterial }, // Front-Left
+                { id: "FR", x: 50, z: -42, color: silverLegsMaterial }, // Front-Right
+                { id: "BL", x: -50, z: 42, color: silverLegsMaterial }, // Back-Left
+                { id: "BR", x: -50, z: -42, color: silverLegsMaterial }  // Back-Right
+            ];
+
+            offsets.forEach(offset => {
+                const legGroup = new THREE.Group();
+                legGroup.position.set(offset.x, -5, offset.z);
+
+                // Hip Abduction Cylinder representing active Hip Roll motor (1st joint)
+                const hipJoint = new THREE.Mesh(new THREE.CylinderGeometry(8, 8, 14, 24), darkCarbonMaterial);
+                hipJoint.rotation.x = Math.PI / 2;
+                legGroup.add(hipJoint);
+
+                // Upper Thigh Bracket (2nd joint)
+                const thighPivot = new THREE.Group();
+                thighPivot.position.set(0, -5, offset.z > 0 ? 5 : -5);
+                legGroup.add(thighPivot);
+
+                // Upper Thigh Link - Femur (50 mm)
+                const femur = new THREE.Mesh(new THREE.BoxGeometry(10, 50, 10), offset.color);
+                femur.position.y = -20;
+                femur.castShadow = true;
+                thighPivot.add(femur);
+
+                // Knee Joint Cylinder (3rd joint)
+                const kneeJoint = new THREE.Mesh(new THREE.CylinderGeometry(6, 6, 10, 16), darkCarbonMaterial);
+                kneeJoint.position.set(0, -45, 0);
+                kneeJoint.rotation.x = Math.PI / 2;
+                thighPivot.add(kneeJoint);
+
+                // Lower Shin Link - Tibia (50 mm)
+                const tibiaPivot = new THREE.Group();
+                tibiaPivot.position.set(0, -45, 0);
+                thighPivot.add(tibiaPivot);
+
+                const tibia = new THREE.Mesh(new THREE.BoxGeometry(7, 50, 7), offset.color);
+                tibia.position.y = -22;
+                tibia.rotation.z = 0.2; // Natural structural bend for shock absorption
+                tibia.castShadow = true;
+                tibiaPivot.add(tibia);
+
+                // High-friction spherical rubber foot
+                const foot = new THREE.Mesh(new THREE.SphereGeometry(7.5, 16, 16), darkCarbonMaterial);
+                foot.position.set(4, -46, 0);
+                foot.castShadow = true;
+                tibiaPivot.add(foot);
+
+                // Pivot registration for simulation
+                if (offset.id === "FL") { legFL_Hip = thighPivot; legFL_Knee = tibiaPivot; }
+                if (offset.id === "FR") { legFR_Hip = thighPivot; legFR_Knee = tibiaPivot; }
+                if (offset.id === "BL") { legBL_Hip = thighPivot; legBL_Knee = tibiaPivot; }
+                if (offset.id === "BR") { legBR_Hip = thighPivot; legBR_Knee = tibiaPivot; }
+
+                bodyMesh.add(legGroup);
+            });
+
+            // Tail Antenna
+            const tailPivot = new THREE.Group();
+            tailPivot.position.set(-70, 5, 0);
+            bodyMesh.add(tailPivot);
+
+            const tailBase = new THREE.Mesh(new THREE.SphereGeometry(6, 16, 16), darkCarbonMaterial);
+            tailPivot.add(tailBase);
+
+            const tailStem = new THREE.Mesh(new THREE.CylinderGeometry(2, 1, 35, 12), accentOrangeMaterial);
+            tailStem.position.set(-12, 12, 0);
+            tailStem.rotation.z = -Math.PI / 4;
+            tailStem.castShadow = true;
+            tailPivot.add(tailStem);
+
+            scene.add(robotGroup);
+
+            // 4. Standard Robot Dimension Overlays (No external CAD references)
+            createDimensionLine(new THREE.Vector3(-70, -10, 35), new THREE.Vector3(70, -10, 35), "L: 140 mm");
+            createDimensionLine(new THREE.Vector3(70, -10, -35), new THREE.Vector3(70, -10, 35), "W: 70 mm");
+            createDimensionLine(new THREE.Vector3(50, -45, 42), new THREE.Vector3(50, -15, 42), "H: 50 mm");
+        }
+
+        // Dimension line helper
+        function createDimensionLine(start, end, label) {
+            const material = new THREE.LineDashedMaterial({
+                color: 0x38bdf8,
+                dashSize: 3,
+                gapSize: 2
+            });
+
+            const points = [start, end];
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const line = new THREE.Line(geometry, material);
+            line.computeLineDistances();
+            dimensionsGroup.add(line);
+
+            const tickGeo = new THREE.BoxGeometry(1.5, 3, 3);
+            const tickMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
+            
+            const t1 = new THREE.Mesh(tickGeo, tickMat);
+            t1.position.copy(start);
+            dimensionsGroup.add(t1);
+
+            const t2 = new THREE.Mesh(tickGeo, tickMat);
+            t2.position.copy(end);
+            dimensionsGroup.add(t2);
+        }
+
+        function setupHUD() {
+            const btnWalk = document.getElementById('btn-toggle-walk');
+            const btnDims = document.getElementById('btn-toggle-dims');
+            const btnReset = document.getElementById('btn-reset-view');
+            const statusText = document.getElementById('hud-text');
+
+            // Walk Trot Toggle
+            btnWalk.addEventListener('click', () => {
+                isWalking = !isWalking;
+                if (isWalking) {
+                    btnWalk.classList.remove('bg-sky-600', 'hover:bg-sky-500');
+                    btnWalk.classList.add('bg-emerald-600', 'hover:bg-emerald-500');
+                    btnWalk.innerHTML = `<i class="fa-solid fa-circle-pause"></i> إيقاف المشية`;
+                    statusText.innerText = "محاكاة الهرولة النشطة (Trot Gait) تعمل الآن بتناوب قطري كامل للأرجل";
+                } else {
+                    btnWalk.classList.remove('bg-emerald-600', 'hover:bg-emerald-500');
+                    btnWalk.classList.add('bg-sky-600', 'hover:bg-sky-500');
+                    btnWalk.innerHTML = `<i class="fa-solid fa-person-walking"></i> تشغيل المشية`;
+                    statusText.innerText = "وضع الاستعداد: عودة الأرجل لوضع الوقوف الثابت المتزن";
+                    resetLegPositions();
+                }
+            });
+
+            // Dimensions Overlay Toggle
+            btnDims.addEventListener('click', () => {
+                showDimensions = !showDimensions;
+                dimensionsGroup.visible = showDimensions;
+                if (showDimensions) {
+                    btnDims.classList.add('bg-sky-950', 'text-sky-300', 'border', 'border-sky-500/30');
+                    statusText.innerText = "مخطط قياسات وأبعاد الروبوت بالمليمتر ظاهر الآن على التصميم ثلاثي الأبعاد";
+                } else {
+                    btnDims.classList.remove('bg-sky-950', 'text-sky-300', 'border', 'border-sky-500/30');
+                    statusText.innerText = "تم إخفاء خطوط وأبعاد التصميم الهيكلي للروبوت";
+                }
+            });
+
+            // Camera Reset
+            btnReset.addEventListener('click', () => {
+                focusCamera(0, 10, 0, 160, 100, 160, "تمت إعادة ضبط زاوية كاميرا العرض للوضع الافتراضي");
+            });
+
+            // Torque Calculator Slider inputs
+            const sliderWeight = document.getElementById('slider-weight');
+            const sliderLeg = document.getElementById('slider-leg');
+
+            const updateCalc = () => {
+                recalculateTorque();
+            };
+
+            sliderWeight.addEventListener('input', updateCalc);
+            sliderLeg.addEventListener('input', updateCalc);
+        }
+
+        // Live Torque Calculation Engine
+        function recalculateTorque() {
+            const weightGrams = parseFloat(document.getElementById('slider-weight').value);
+            const legLengthMm = parseFloat(document.getElementById('slider-leg').value);
+
+            document.getElementById('calc-weight-val').innerText = `${weightGrams} جم`;
+            document.getElementById('calc-leg-val').innerText = `${legLengthMm} ملم`;
+
+            // Dynamic math calculations
+            const massKg = weightGrams / 1000;
+            const gravity = 9.8; // Match the 9.8 m/s² from prompt slide
+            const totalForceN = massKg * gravity;
+            
+            // Trot gait has 2 legs supporting weight at any instant: F = W / 2
+            const forcePerSupportingLegN = totalForceN / 2;
+            document.getElementById('formula-force').innerText = `${forcePerSupportingLegN.toFixed(2)} N`;
+
+            // Max Torque when leg is horizontally extended: T = F_leg * L
+            const lengthMeters = legLengthMm / 1000;
+            const torqueNm = forcePerSupportingLegN * lengthMeters;
+            
+            // Convert N.m to kg.cm (1 N.m = 10.197 kg.cm)
+            const torqueKgCm = torqueNm * 10.19716;
+
+            document.getElementById('calculated-torque').innerText = `${torqueKgCm.toFixed(2)} kg·cm`;
+
+            // Compare with SG90 limit (1.8 kg·cm)
+            const safetyFactor = (1.8 / torqueKgCm) - 1.0;
+            const safetyPct = Math.round(safetyFactor * 100);
+
+            const safetyText = document.getElementById('safety-factor');
+            if (safetyPct > 40) {
+                safetyText.innerText = `${safetyPct}% (آمن ومطابق للمواصفات)`;
+                safetyText.className = "text-emerald-400 font-bold";
+            } else if (safetyPct > 0) {
+                safetyText.innerText = `${safetyPct}% (مقبول)`;
+                safetyText.className = "text-yellow-400 font-bold";
+            } else {
+                safetyText.innerText = `${safetyPct}% (خطر - يتطلب محرك MG90S)`;
+                safetyText.className = "text-red-500 font-bold animate-pulse";
+            }
+        }
+
+        // Smooth Camera Transition Lerping
+        function focusCamera(tx, ty, tz, cx, cy, cz, msg) {
+            document.getElementById('hud-text').innerText = msg;
+            let step = 0;
+            const maxSteps = 20;
+            const startTarget = controls.target.clone();
+            const startPos = camera.position.clone();
+            const endTarget = new THREE.Vector3(tx, ty, tz);
+            const endPos = new THREE.Vector3(cx, cy, cz);
+
+            function lerp() {
+                step++;
+                const progress = step / maxSteps;
+                const ease = progress * (2 - progress); // Quadratic ease out
+                controls.target.lerpVectors(startTarget, endTarget, ease);
+                camera.position.lerpVectors(startPos, endPos, ease);
+                if (step < maxSteps) {
+                    requestAnimationFrame(lerp);
+                }
+            }
+            lerp();
+        }
+
+        // Tab selection with camera focus sync
+        function switchTab(tabId) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(el => el.classList.add('hidden'));
+
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.className = "tab-btn bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold py-2 px-1 rounded-lg transition-all duration-200 mt-1.5";
+            });
+
+            document.getElementById(`tab-content-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-btn-${tabId}`).className = "tab-btn bg-sky-600 text-white text-[11px] font-bold py-2 px-1 rounded-lg transition-all duration-200 shadow-md";
+
+            // Rotate camera perspective based on tab focus
+            if (tabId === 1) { // Body
+                focusCamera(0, 10, 0, 150, 45, 150, "تم التركيز على الهيكل المتزن والمنصة المركزية لتوزيع الأوزان");
+            } else if (tabId === 2) { // Legs
+                focusCamera(50, -15, 42, 120, -10, 120, "تم التركيز على بنية الأطراف (الفخذ والساق) وكعب الاحتكاك المطاطي");
+            } else if (tabId === 3 || tabId === 4) { // Joints or Motors
+                focusCamera(50, -5, 42, 100, 15, 100, "تم التركيز على المفاصل النشطة وتثبيت محركات السيرفو عند الزوايا");
+            } else if (tabId === 5) { // Torque
+                focusCamera(0, 0, 0, 150, 50, 150, "حاسبة العزوم النشطة تقوم بتحليل قوى القص المطبقة تلقائياً");
+            } else if (tabId === 6 || tabId === 7) { // Stability or Locomotion
+                focusCamera(0, 10, 0, 170, 70, 170, "محاكاة التوازن ومضلع الدعم المتشكل من نقاط ملامسة الأرض");
+            } else if (tabId === 8) { // Problems
+                focusCamera(0, -10, 0, 160, 20, 160, "تحليل الفراغات الميكانيكية وتآكل التروس وحلول البناء الهيكلية");
+            }
+        }
+
+        function resetLegPositions() {
+            if (legFR_Hip) {
+                legFR_Hip.rotation.z = 0; legFR_Knee.rotation.z = 0;
+                legFL_Hip.rotation.z = 0; legFL_Knee.rotation.z = 0;
+                legBR_Hip.rotation.z = 0; legBR_Knee.rotation.z = 0;
+                legBL_Hip.rotation.z = 0; legBL_Knee.rotation.z = 0;
+                headMesh.rotation.y = 0; headMesh.rotation.z = 0;
+            }
+        }
+
+        function onWindowResize() {
+            const container = document.getElementById('canvas-container');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = Date.now() * 0.001;
+
+            if (bodyMesh) {
+                if (!isWalking) {
+                    // Gentle idle breathing cycle
+                    bodyMesh.position.y = Math.sin(time * 1.5) * 1.2 + 5;
+                    headMesh.rotation.y = Math.sin(time * 0.8) * 0.05;
+                    headMesh.rotation.z = Math.cos(time * 0.6) * 0.03;
+                } else {
+                    // Trot Gait Simulation
+                    walkTime += 0.08;
+                    const walkSpeed = 1.8;
+                    
+                    const angle1 = Math.sin(walkTime * walkSpeed);
+                    const angle2 = Math.sin(walkTime * walkSpeed + Math.PI); // Phase shifted 180 degrees
+                    
+                    // Body bounce & vertical tilt matching walk cycle
+                    bodyMesh.position.y = Math.abs(Math.sin(walkTime * walkSpeed * 2)) * 3 + 3;
+                    bodyMesh.rotation.z = Math.sin(walkTime * walkSpeed) * 0.03;
+
+                    // Leg pair 1 (FL & BR)
+                    legFR_Hip.rotation.z = angle1 * 0.35;
+                    legFR_Knee.rotation.z = Math.max(0, -angle1) * 0.4;
+                    legBL_Hip.rotation.z = angle1 * 0.35;
+                    legBL_Knee.rotation.z = Math.max(0, -angle1) * 0.4;
+
+                    // Leg pair 2 (FR & BL)
+                    legFL_Hip.rotation.z = angle2 * 0.35;
+                    legFL_Knee.rotation.z = Math.max(0, -angle2) * 0.4;
+                    legBR_Hip.rotation.z = angle2 * 0.35;
+                    legBR_Knee.rotation.z = Math.max(0, -angle2) * 0.4;
+
+                    // Active head bobbing
+                    headMesh.rotation.y = Math.sin(walkTime * walkSpeed) * 0.06;
+                }
+            }
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        window.onload = function() {
+            init();
+            animate();
+        };
+    </script>
+</body>
+</html>
