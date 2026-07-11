@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mona Al-Mutairi — Computer Science / AI</title>
+<meta name="description" content="Portfolio of Mona Abdullah Al-Mutairi — Computer Science senior at Qassim University, focused on Artificial Intelligence." />
+<meta name="author" content="Mona Abdullah Al-Mutairi" />
+<meta name="google-site-verification" content="GdW2rrTCtsiGp2fk2c7oHnan3WDscBWy3Z1FJ77E4Oc" />
+<meta property="og:title" content="Mona Al-Mutairi — Computer Science / AI" />
+<meta property="og:description" content="CS senior · AI focus · AXRION Best Voted Project winner · 3x national hackathon finalist." />
+<meta property="og:type" content="website" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* ---------- Tokens ---------- */
+  :root {
+    --bg: #0A0A0D;
+    --bg-soft: #0E0F14;
+    --surface: #14151B;
+    --surface-2: #1A1C24;
+    --border: #232631;
+    --border-soft: #1A1C25;
+    --text: #F1F2F5;
+    --text-muted: #8B8F9F;
+    --text-dim: #5C6072;
+    --gold: #E8C681;
+    --gold-dim: #B59459;
+    --gold-glow: rgba(232, 198, 129, 0.12);
+    --blue: #6BA9E0;
+    --green: #7BC68A;
+    --red: #E0807A;
+    --serif: 'Instrument Serif', 'Times New Roman', serif;
+    --sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* Subtle grain texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(rgba(255,255,255,0.018) 1px, transparent 1px);
+    background-size: 3px 3px;
+    z-index: 1;
+    opacity: 0.6;
+  }
+
+  /* ---------- Layout ---------- */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ---------- Top spec bar ---------- */
+  .specbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(10,10,13,0.7);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .specbar-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+  .specbar-id {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .status-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 10px var(--green);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .specbar-nav {
+    display: flex;
+    gap: 24px;
+  }
+  .specbar-nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .specbar-nav a:hover { color: var(--gold); }
+  @media (max-width: 720px) {
+    .specbar-nav { display: none; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 120px 0 80px;
+    overflow: hidden;
+  }
+  #network-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.85;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 0%, var(--bg) 80%);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+  }
+  .hero-meta {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-meta::before {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: var(--gold);
+  }
+  .hero-name {
+    font-family: var(--serif);
+    font-size: clamp(48px, 9vw, 120px);
+    line-height: 0.95;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .hero-name .italic {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .hero-role {
+    font-family: var(--serif);
+    font-size: clamp(24px, 3.4vw, 38px);
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+    font-weight: 400;
+  }
+  .hero-spec {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    max-width: 760px;
+    margin-top: 56px;
+  }
+  .spec-cell {
+    background: var(--bg-soft);
+    padding: 18px 20px;
+  }
+  .spec-key {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .spec-val {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--text);
+  }
+  .spec-val .accent { color: var(--gold); }
+
+  /* Scroll cue */
+  .scroll-cue {
+    position: absolute;
+    bottom: 32px; left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .scroll-cue::after {
+    content: '';
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: drop 2s ease-in-out infinite;
+  }
+  @keyframes drop {
+    0%, 100% { transform: scaleY(1); transform-origin: top; }
+    50% { transform: scaleY(0.3); transform-origin: top; }
+  }
+
+  /* ---------- Section primitives ---------- */
+  section {
+    padding: 120px 0;
+    position: relative;
+  }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 56px;
+    border-bottom: 1px solid var(--border-soft);
+    padding-bottom: 20px;
+  }
+  .section-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.16em;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    flex: 1;
+  }
+  .section-title .italic {
+    font-style: italic;
+    color: var(--text-muted);
+  }
+  .section-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  @media (max-width: 640px) {
+    .section-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+    section { padding: 80px 0; }
+  }
+
+  /* ---------- About / Summary ---------- */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 80px;
+    align-items: start;
+  }
+  @media (max-width: 880px) {
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  }
+  .about-aside {
+    position: sticky;
+    top: 100px;
+  }
+  .about-aside .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .about-aside .value {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 28px;
+    color: var(--gold);
+    line-height: 1.2;
+    margin-bottom: 32px;
+  }
+  .about-body {
+    font-size: 19px;
+    line-height: 1.65;
+    color: var(--text);
+    font-weight: 300;
+  }
+  .about-body p + p { margin-top: 22px; }
+  .about-body .highlight {
+    color: var(--gold);
+    font-style: italic;
+    font-family: var(--serif);
+    font-size: 22px;
+  }
+
+  /* ---------- Hackathons (featured) ---------- */
+  .award-banner {
+    display: flex;
+    gap: 32px;
+    padding: 40px;
+    border: 1px solid var(--gold);
+    background:
+      linear-gradient(135deg, rgba(232,198,129,0.06) 0%, transparent 60%),
+      var(--surface);
+    margin-bottom: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .award-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -10%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .award-mark {
+    font-family: var(--serif);
+    font-size: 72px;
+    line-height: 1;
+    color: var(--gold);
+    font-style: italic;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .award-content {
+    flex: 1;
+    position: relative;
+  }
+  .award-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid var(--gold);
+    margin-bottom: 12px;
+  }
+  .award-title {
+    font-family: var(--serif);
+    font-size: 36px;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .award-sub {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 16px;
+    font-family: var(--mono);
+  }
+  .award-desc {
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 640px;
+  }
+  .award-agents {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+  }
+  .agent-chip {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 10px;
+    background: rgba(232,198,129,0.08);
+    border: 1px solid var(--border);
+    color: var(--gold);
+    letter-spacing: 0.05em;
+  }
+  @media (max-width: 640px) {
+    .award-banner { flex-direction: column; padding: 28px; gap: 16px; }
+    .award-mark { font-size: 56px; }
+    .award-title { font-size: 28px; }
+  }
+
+  .hack-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .hack-row {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: 32px;
+    padding: 28px 0;
+    border-top: 1px solid var(--border-soft);
+    align-items: start;
+    transition: padding 0.3s ease;
+  }
+  .hack-row:last-child { border-bottom: 1px solid var(--border-soft); }
+  .hack-row:hover { padding-left: 12px; }
+  .hack-row:hover .hack-arrow { color: var(--gold); transform: translateX(4px); }
+  .hack-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    padding-top: 4px;
+  }
+  .hack-info h3 {
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 400;
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+  .hack-info .role {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .hack-info p {
+    color: var(--text-muted);
+    font-size: 14.5px;
+    line-height: 1.6;
+    max-width: 600px;
+  }
+  .hack-meta {
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+    padding-top: 6px;
+    white-space: nowrap;
+  }
+  .hack-arrow {
+    color: var(--text-dim);
+    transition: color 0.3s, transform 0.3s;
+    font-size: 18px;
+    margin-top: 2px;
+  }
+  @media (max-width: 720px) {
+    .hack-row { grid-template-columns: 1fr; gap: 8px; }
+    .hack-meta { text-align: left; padding-top: 0; }
+  }
+
+  /* ---------- Projects grid ---------- */
+  .proj-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+  }
+  .proj-card {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    padding: 28px;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 220px;
+  }
+  .proj-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-3px);
+    background: var(--surface-2);
+  }
+  .proj-card.featured {
+    background:
+      linear-gradient(135deg, rgba(232,198,129,0.04) 0%, transparent 100%),
+      var(--surface);
+    border-color: var(--gold-dim);
+  }
+  .proj-tag {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+  .proj-status {
+    color: var(--green);
+  }
+  .proj-status.done { color: var(--text-dim); }
+  .proj-card h4 {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+  .proj-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+    letter-spacing: 0.04em;
+  }
+  .proj-desc {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.55;
+    flex: 1;
+  }
+  .proj-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--border-soft);
+  }
+  .tech-pill {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    padding: 3px 8px;
+    background: var(--bg-soft);
+    border: 1px solid var(--border-soft);
+  }
+
+  /* ---------- Experience timeline ---------- */
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+    border-left: 1px solid var(--border);
+  }
+  .tl-item {
+    position: relative;
+    padding-bottom: 36px;
+  }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -38px;
+    top: 8px;
+    width: 11px;
+    height: 11px;
+    background: var(--bg);
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+  }
+  .tl-item.current::before {
+    background: var(--gold);
+    box-shadow: 0 0 0 3px var(--gold-glow);
+  }
+  .tl-date {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .tl-item h4 {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.3;
+    margin-bottom: 2px;
+  }
+  .tl-org {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .tl-item ul {
+    list-style: none;
+    padding: 0;
+  }
+  .tl-item li {
+    color: var(--text-muted);
+    font-size: 14.5px;
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.55;
+    margin-bottom: 6px;
+  }
+  .tl-item li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+  }
+
+  /* ---------- Skills ---------- */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  @media (max-width: 880px) {
+    .skills-grid { grid-template-columns: 1fr; }
+  }
+  .skills-col {
+    background: var(--bg);
+    padding: 32px;
+  }
+  .skills-col h4 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .skills-col ul {
+    list-style: none;
+  }
+  .skills-col li {
+    padding: 10px 0;
+    font-size: 14px;
+    color: var(--text);
+    border-bottom: 1px dashed var(--border-soft);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+  }
+  .skills-col li:last-child { border: none; }
+  .skills-col li .lvl {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+
+  /* ---------- Languages ---------- */
+  .lang-wall {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .lang-cell {
+    background: var(--surface);
+    padding: 32px 24px;
+    text-align: center;
+    transition: background 0.3s;
+  }
+  .lang-cell:hover { background: var(--surface-2); }
+  .lang-name {
+    font-family: var(--serif);
+    font-size: 28px;
+    margin-bottom: 6px;
+  }
+  .lang-native {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .lang-level {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: var(--mono);
+  }
+
+  /* ---------- Certifications ---------- */
+  .certs-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .cert-item {
+    padding: 20px;
+    background: var(--surface);
+    border-left: 2px solid var(--gold-dim);
+    transition: all 0.3s;
+  }
+  .cert-item:hover {
+    background: var(--surface-2);
+    border-left-color: var(--gold);
+  }
+  .cert-item.in-progress {
+    border-left-color: var(--green);
+  }
+  .cert-name {
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
+  .cert-org {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .cert-date {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+  }
+  .cert-prog-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 2px 6px;
+    background: rgba(123,198,138,0.1);
+    color: var(--green);
+    margin-left: 6px;
+    letter-spacing: 0.1em;
+  }
+
+  /* ---------- Contact / Footer ---------- */
+  .contact {
+    padding: 140px 0 100px;
+    border-top: 1px solid var(--border-soft);
+    text-align: center;
+    position: relative;
+  }
+  .contact-pre {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .contact-title {
+    font-family: var(--serif);
+    font-size: clamp(48px, 8vw, 96px);
+    line-height: 1;
+    margin-bottom: 40px;
+  }
+  .contact-title .italic {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 60px;
+  }
+  .contact-btn {
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 14px 28px;
+    border: 1px solid var(--border);
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    transition: all 0.3s;
+    background: var(--surface);
+  }
+  .contact-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--surface-2);
+    transform: translateY(-2px);
+  }
+  .contact-btn.primary {
+    background: var(--gold);
+    color: var(--bg);
+    border-color: var(--gold);
+    font-weight: 600;
+  }
+  .contact-btn.primary:hover {
+    background: transparent;
+    color: var(--gold);
+    transform: translateY(-2px);
+  }
+  footer {
+    padding: 32px 0;
+    border-top: 1px solid var(--border-soft);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* ---------- Scroll-in animations ---------- */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .fade-in { opacity: 1; transform: none; }
+  }
+
+  /* Selection */
+  ::selection { background: var(--gold); color: var(--bg); }
+</style>
+</head>
+<body>
+
+<!-- ============= SPEC BAR ============= -->
+<nav class="specbar">
+  <div class="specbar-inner">
+    <div class="specbar-id">
+      <span class="status-dot"></span>
+      <span>SPEC.v2026 / MONA_A</span>
+    </div>
+    <div class="specbar-nav">
+      <a href="#summary">summary</a>
+      <a href="#hackathons">awards</a>
+      <a href="#projects">projects</a>
+      <a href="#experience">experience</a>
+      <a href="#skills">skills</a>
+      <a href="#contact">contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============= HERO ============= -->
+<header class="hero">
+  <canvas id="network-canvas"></canvas>
+
+  <div class="container hero-inner">
+    <div class="hero-meta">
+      <span>Computer Science · AI Architect · Qassim University</span>
+    </div>
+
+    <h1 class="hero-name">
+      Mona <span class="italic">Al-Mutairi</span>
+    </h1>
+    <p class="hero-role">designing systems where many minds think together</p>
+
+    <div class="hero-spec">
+      <div class="spec-cell">
+        <div class="spec-key">→ Status</div>
+        <div class="spec-val"><span class="accent">●</span> Open to Opportunities</div>
+      </div>
+      <div class="spec-cell">
+        <div class="spec-key">→ Focus</div>
+        <div class="spec-val">Artificial Intelligence</div>
+      </div>
+      <div class="spec-cell">
+        <div class="spec-key">→ Standing</div>
+        <div class="spec-val">Senior · CS</div>
+      </div>
+      <div class="spec-cell">
+        <div class="spec-key">→ Languages</div>
+        <div class="spec-val">5 spoken · 4 coded</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-cue">SCROLL</div>
+</header>
+
+<!-- ============= SUMMARY ============= -->
+<section id="summary">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">/01</span>
+      <h2 class="section-title">A short <span class="italic">briefing</span></h2>
+      <span class="section-sub">// summary</span>
+    </div>
+
+    <div class="about-grid fade-in">
+      <aside class="about-aside">
+        <div class="label">Currently</div>
+        <div class="value">Building AI systems<br>that simulate thought.</div>
+
+        <div class="label">Interested in</div>
+        <div class="value">AI & Software Development roles.</div>
+      </aside>
+
+      <div class="about-body">
+        <p>
+          I'm a Computer Science senior at <strong>Qassim University</strong> (graduating 2027), and most of my work lives at the intersection of <span class="highlight">artificial intelligence, software architecture, and human leadership</span>.
+        </p>
+        <p>
+          In March 2026, my project <strong>AXRION</strong> — a multi-agent advisory system that simulates historical figures — won the <strong>Best Voted Project</strong> award at the Google Developer Group on Campus competition. Beyond AXRION, I'm a three-time national hackathon finalist, each time as the team founder, idea owner, and presenter.
+        </p>
+        <p>
+          Beyond the code, I lead initiatives at the Computer Club, host technical events, design, photograph, and have studied four languages outside my native Arabic. I'm drawn to problems that need both engineering precision and a point of view.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= HACKATHONS & AWARDS ============= -->
+<section id="hackathons">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">/02</span>
+      <h2 class="section-title">Hackathons <span class="italic">&amp; recognition</span></h2>
+      <span class="section-sub">// 1 win · 3 finals</span>
+    </div>
+
+    <!-- Award banner -->
+    <div class="award-banner fade-in">
+      <div class="award-mark">★</div>
+      <div class="award-content">
+        <span class="award-tag">Best Voted Project · March 2026 · Solo Build</span>
+        <h3 class="award-title">AXRION</h3>
+        <p class="award-sub">Unlimited Automation with AI Agents — GDG on Campus Qassim</p>
+        <p class="award-desc">
+          A multi-agent AI advisory system that simulates historical figures to provide situational guidance. Designed and built as an individual project — four specialized agents work in concert, each with a distinct role in the reasoning pipeline.
+        </p>
+        <div class="award-agents">
+          <span class="agent-chip">// Emotion Detection</span>
+          <span class="agent-chip">// Persona Simulation</span>
+          <span class="agent-chip">// Smart Summarizer</span>
+          <span class="agent-chip">// AI Roadmap Architect</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Other hackathons -->
+    <div class="hack-list">
+      <div class="hack-row fade-in">
+        <div class="hack-num">/03</div>
+        <div class="hack-info">
+          <h3>Jallah — Abshir Hackathon</h3>
+          <div class="role">Finalist · Team Leader · Idea Owner · Presenter</div>
+          <p>An AI predictive security system reaching <strong>74% model accuracy</strong>. Led the team and presented through 1.5 months of development, qualifying to the national finals at Tuwaiq Academy.</p>
+        </div>
+        <div class="hack-meta">Dec 2025<br>Tuwaiq Academy</div>
+      </div>
+
+      <div class="hack-row fade-in">
+        <div class="hack-num">/02</div>
+        <div class="hack-info">
+          <h3>Hajj Logistics Hackathon</h3>
+          <div class="role">Finalist · Team Leader · Idea Owner</div>
+          <p>Proposed a supply chain management system for the Holy Sites supporting Vision 2030. Led the team, presentation, and stakeholder communication.</p>
+        </div>
+        <div class="hack-meta">2025<br>Ministry of Hajj &amp; Umrah ✕ University of Jeddah</div>
+      </div>
+
+      <div class="hack-row fade-in">
+        <div class="hack-num">/01</div>
+        <div class="hack-info">
+          <h3>EcoMind — Roshan Hackathon</h3>
+          <div class="role">Finalist · Team Leader · Idea Owner</div>
+          <p>Originated and led EcoMind, a smart IoT-based infrastructure solution. Reached the pre-finals stage.</p>
+        </div>
+        <div class="hack-meta">2024<br>Roshan Hackathon</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= PROJECTS ============= -->
+<section id="projects">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">/03</span>
+      <h2 class="section-title">Selected <span class="italic">projects</span></h2>
+      <span class="section-sub">// builds</span>
+    </div>
+
+    <div class="proj-grid">
+
+      <div class="proj-card featured fade-in">
+        <div class="proj-tag">
+          <span>iOS · Personal</span>
+          <span class="proj-status">● In Progress</span>
+        </div>
+        <h4>Malika</h4>
+        <div class="proj-meta">2026 → Present</div>
+        <p class="proj-desc">A full-featured iOS app being built from concept to App Store using AI-assisted development tools.</p>
+        <div class="proj-tech">
+          <span class="tech-pill">Swift</span>
+          <span class="tech-pill">iOS</span>
+          <span class="tech-pill">AI-assisted dev</span>
+        </div>
+      </div>
+
+      <div class="proj-card fade-in">
+        <div class="proj-tag">
+          <span>Computer Vision</span>
+          <span class="proj-status done">Jan 2026</span>
+        </div>
+        <h4>Cancer Cell Segmentation</h4>
+        <div class="proj-meta">Tuwaiq Academy — Image Processing with Python</div>
+        <p class="proj-desc">Applied Edge Detection and Thresholding to segment cancer cells from medical images.</p>
+        <div class="proj-tech">
+          <span class="tech-pill">Python</span>
+          <span class="tech-pill">OpenCV</span>
+          <span class="tech-pill">Image Processing</span>
+        </div>
+      </div>
+
+      <div class="proj-card fade-in">
+        <div class="proj-tag">
+          <span>SE · System Design</span>
+          <span class="proj-status done">Sep – Dec 2025</span>
+        </div>
+        <h4>Hajj Crowd Management Drone System</h4>
+        <div class="proj-meta">Qassim University — Software Engineering Course</div>
+        <p class="proj-desc">Designed an AI-powered drone system for Hajj crowd safety; delivered full SE documentation including requirements, UML, system architecture, and Agile/Scrum planning.</p>
+        <div class="proj-tech">
+          <span class="tech-pill">UML</span>
+          <span class="tech-pill">System Architecture</span>
+          <span class="tech-pill">Agile</span>
+        </div>
+      </div>
+
+      <div class="proj-card fade-in">
+        <div class="proj-tag">
+          <span>NLP</span>
+          <span class="proj-status done">Oct – Dec 2025</span>
+        </div>
+        <h4>Language Detection System</h4>
+        <div class="proj-meta">Qassim University</div>
+        <p class="proj-desc">Python language detector using Letter Frequency and N-gram models; benchmarked speed-accuracy trade-offs (<strong>1.1ms vs 2.4ms</strong>).</p>
+        <div class="proj-tech">
+          <span class="tech-pill">Python</span>
+          <span class="tech-pill">N-grams</span>
+          <span class="tech-pill">NLP</span>
+        </div>
+      </div>
+
+      <div class="proj-card fade-in">
+        <div class="proj-tag">
+          <span>OOP · Desktop App</span>
+          <span class="proj-status done">Oct – Dec 2025</span>
+        </div>
+        <h4>Event Registration &amp; Ticket System</h4>
+        <div class="proj-meta">Qassim University</div>
+        <p class="proj-desc">A Java OOP desktop application for event registration, ticketing, and database management.</p>
+        <div class="proj-tech">
+          <span class="tech-pill">Java</span>
+          <span class="tech-pill">OOP</span>
+          <span class="tech-pill">Database</span>
+        </div>
+      </div>
+
+      <div class="proj-card fade-in">
+        <div class="proj-tag">
+          <span>Security · Cloud</span>
+          <span class="proj-status done">Sep – Dec 2025</span>
+        </div>
+        <h4>Encrypted Cloud Backup System</h4>
+        <div class="proj-meta">Qassim University</div>
+        <p class="proj-desc">A high-security cloud backup system applying cryptography and security engineering principles.</p>
+        <div class="proj-tech">
+          <span class="tech-pill">Cryptography</span>
+          <span class="tech-pill">Cloud</span>
+          <span class="tech-pill">Security</span>
+        </div>
+      </div>
+
+      <div class="proj-card fade-in">
+        <div class="proj-tag">
+          <span>Data Structures · CLI</span>
+          <span class="proj-status done">Mar – May 2024</span>
+        </div>
+        <h4>Student Record Management System</h4>
+        <div class="proj-meta">Qassim University</div>
+        <p class="proj-desc">A C++ CLI system using a hybrid Array/Linked List and circular FCFS queue for student records and service requests.</p>
+        <div class="proj-tech">
+          <span class="tech-pill">C++</span>
+          <span class="tech-pill">Data Structures</span>
+          <span class="tech-pill">Queues</span>
+        </div>
+      </div>
+
+      <div class="proj-card fade-in">
+        <div class="proj-tag">
+          <span>Programming Theory</span>
+          <span class="proj-status done">Feb – May 2024</span>
+        </div>
+        <h4>Programming Paradigms Analysis</h4>
+        <div class="proj-meta">Qassim University — CS213</div>
+        <p class="proj-desc">Compared Procedural (Pascal), Functional (Scheme), and Logic (Prolog) paradigms, with focus on AI applications in Prolog.</p>
+        <div class="proj-tech">
+          <span class="tech-pill">Pascal</span>
+          <span class="tech-pill">Scheme</span>
+          <span class="tech-pill">Prolog</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============= EXPERIENCE ============= -->
+<section id="experience">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">/04</span>
+      <h2 class="section-title">Roles <span class="italic">&amp; involvement</span></h2>
+      <span class="section-sub">// experience</span>
+    </div>
+
+    <div class="timeline fade-in">
+
+      <div class="tl-item current">
+        <div class="tl-date">May 2023 → Present</div>
+        <h4>Events Organizer &amp; Presenter</h4>
+        <div class="tl-org">Qassim University — Computer Club</div>
+        <ul>
+          <li>Organized and facilitated programming and technology initiatives for the club.</li>
+          <li>Served as presenter and host, developing public speaking and event management skills.</li>
+        </ul>
+      </div>
+
+      <div class="tl-item current">
+        <div class="tl-date">May 2023 → Present</div>
+        <h4>Photographer</h4>
+        <div class="tl-org">Qassim University — Computer Club</div>
+        <ul>
+          <li>Covered university events, producing visual content for social media and official communications.</li>
+        </ul>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">Oct 2024 – Jun 2025</div>
+        <h4>Marketer (Part-time)</h4>
+        <div class="tl-org">Qassim University — Computer Club</div>
+        <ul>
+          <li>Planned and executed marketing campaigns to promote club training courses and events.</li>
+          <li>Managed promotional content across digital channels to drive student engagement and enrollment.</li>
+        </ul>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">Apr 2023 – Jan 2024</div>
+        <h4>Graphic Designer</h4>
+        <div class="tl-org">SOCTechMinds</div>
+        <ul>
+          <li>Created visual designs for digital content, strengthening creative and technical design skills.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============= SKILLS ============= -->
+<section id="skills">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">/05</span>
+      <h2 class="section-title">Toolkit <span class="italic">&amp; capabilities</span></h2>
+      <span class="section-sub">// skills</span>
+    </div>
+
+    <div class="skills-grid fade-in">
+
+      <div class="skills-col">
+        <h4>// Engineering</h4>
+        <ul>
+          <li>Python <span class="lvl">●●●●●</span></li>
+          <li>Java <span class="lvl">●●●●○</span></li>
+          <li>C / C++ <span class="lvl">●●●●○</span></li>
+          <li>SDLC · UML <span class="lvl">●●●●○</span></li>
+          <li>OOP · APIs <span class="lvl">●●●●●</span></li>
+          <li>Agile / Scrum <span class="lvl">●●●●○</span></li>
+        </ul>
+      </div>
+
+      <div class="skills-col">
+        <h4>// AI &amp; Data</h4>
+        <ul>
+          <li>Multi-Agent Systems <span class="lvl">●●●●●</span></li>
+          <li>LLMs · Generative AI <span class="lvl">●●●●○</span></li>
+          <li>Prompt Engineering <span class="lvl">●●●●●</span></li>
+          <li>Machine Learning <span class="lvl">●●●●○</span></li>
+          <li>NLP <span class="lvl">●●●●○</span></li>
+          <li>Computer Vision · OpenCV <span class="lvl">●●●●○</span></li>
+          <li>Pandas · Data Analysis <span class="lvl">●●●●○</span></li>
+        </ul>
+      </div>
+
+      <div class="skills-col">
+        <h4>// Leadership &amp; Craft</h4>
+        <ul>
+          <li>Public Speaking <span class="lvl">●●●●●</span></li>
+          <li>Team Building <span class="lvl">●●●●●</span></li>
+          <li>Event Organization <span class="lvl">●●●●●</span></li>
+          <li>Creative Thinking <span class="lvl">●●●●●</span></li>
+          <li>Graphic Design <span class="lvl">●●●●○</span></li>
+          <li>Photography <span class="lvl">●●●●○</span></li>
+          <li>Digital Marketing <span class="lvl">●●●●○</span></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============= LANGUAGES ============= -->
+<section id="languages">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">/06</span>
+      <h2 class="section-title">Spoken <span class="italic">&amp; understood</span></h2>
+      <span class="section-sub">// 5 languages</span>
+    </div>
+
+    <div class="lang-wall fade-in">
+      <div class="lang-cell">
+        <div class="lang-name">عربي</div>
+        <div class="lang-native">Arabic</div>
+        <div class="lang-level">Native</div>
+      </div>
+      <div class="lang-cell">
+        <div class="lang-name">English</div>
+        <div class="lang-native">EN</div>
+        <div class="lang-level">Professional</div>
+      </div>
+      <div class="lang-cell">
+        <div class="lang-name">Türkçe</div>
+        <div class="lang-native">TR</div>
+        <div class="lang-level">Intermediate</div>
+      </div>
+      <div class="lang-cell">
+        <div class="lang-name">Español</div>
+        <div class="lang-native">ES</div>
+        <div class="lang-level">Diploma</div>
+      </div>
+      <div class="lang-cell">
+        <div class="lang-name">Français</div>
+        <div class="lang-native">FR</div>
+        <div class="lang-level">Learning</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= CERTIFICATIONS ============= -->
+<section id="certs">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">/07</span>
+      <h2 class="section-title">Programs <span class="italic">&amp; certifications</span></h2>
+      <span class="section-sub">// continuous learning</span>
+    </div>
+
+    <div class="certs-list fade-in">
+
+      <div class="cert-item in-progress">
+        <div class="cert-name">McKinsey Forward Program<span class="cert-prog-tag">IN PROGRESS</span></div>
+        <div class="cert-org">McKinsey &amp; Company</div>
+        <div class="cert-date">2026 · Leadership &amp; Business Skills</div>
+      </div>
+
+      <div class="cert-item in-progress">
+        <div class="cert-name">Oracle Cloud &amp; AI — Mustaqbali<span class="cert-prog-tag">IN PROGRESS</span></div>
+        <div class="cert-org">Oracle</div>
+        <div class="cert-date">2026</div>
+      </div>
+
+      <div class="cert-item">
+        <div class="cert-name">Unlimited Automation with AI Agents</div>
+        <div class="cert-org">Google Developer Group on Campus Qassim</div>
+        <div class="cert-date">Mar 2026</div>
+      </div>
+
+      <div class="cert-item">
+        <div class="cert-name">Robotics Camp</div>
+        <div class="cert-org">Google Developer Group on Campus Qassim</div>
+        <div class="cert-date">Feb 2026</div>
+      </div>
+
+      <div class="cert-item">
+        <div class="cert-name">Image Processing with Python</div>
+        <div class="cert-org">Tuwaiq Academy</div>
+        <div class="cert-date">Jan 2026</div>
+      </div>
+
+      <div class="cert-item">
+        <div class="cert-name">IBM SkillsBuild — AI &amp; Generative AI Program</div>
+        <div class="cert-org">IBM SkillsBuild · Technosites</div>
+        <div class="cert-date">Dec 2025</div>
+      </div>
+
+      <div class="cert-item">
+        <div class="cert-name">Python Specialization (5 courses)</div>
+        <div class="cert-org">KAUST AI · University of Michigan · Coursera</div>
+        <div class="cert-date">Dec 2025</div>
+      </div>
+
+      <div class="cert-item">
+        <div class="cert-name">Data Pioneer Bootcamp</div>
+        <div class="cert-org">AI Pioneers</div>
+        <div class="cert-date">Sep 2025</div>
+      </div>
+
+      <div class="cert-item">
+        <div class="cert-name">Effective Communication Workshop</div>
+        <div class="cert-org">Misk Skills</div>
+        <div class="cert-date">Aug 2024</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============= CONTACT ============= -->
+<section id="contact" class="contact">
+  <div class="container">
+    <div class="contact-pre">// end of spec — let's build</div>
+    <h2 class="contact-title">Let's <span class="italic">talk</span>.</h2>
+
+    <div class="contact-links">
+      <a href="mailto:mona.abdullah.cs@gmail.com" class="contact-btn primary">→ mona.abdullah.cs@gmail.com</a>
+      <a href="https://www.linkedin.com/in/mona-almutairi-0bb058271" target="_blank" rel="noopener" class="contact-btn">LinkedIn ↗</a>
+      <a href="https://github.com/Mona-CS90" target="_blank" rel="noopener" class="contact-btn">GitHub ↗</a>
+    </div>
+
+    <footer>
+      <span>© 2026 · Mona Abdullah Al-Mutairi</span>
+      <span>Made in Al-Qassim, Saudi Arabia</span>
+    </footer>
+  </div>
+</section>
+
+<script>
+  /* ---------- Multi-Agent Network Animation ---------- */
+  (function () {
+    const canvas = document.getElementById('network-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    let width, height, nodes = [];
+    const NODE_COUNT = window.innerWidth < 720 ? 28 : 55;
+    const CONNECT_DIST = 160;
+    const GOLD = 'rgba(232, 198, 129, ';
+    const BLUE = 'rgba(107, 169, 224, ';
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      width = canvas.offsetWidth;
+      height = canvas.offsetHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+    }
+
+    function init() {
+      resize();
+      nodes = [];
+      for (let i = 0; i < NODE_COUNT; i++) {
+        nodes.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.25,
+          vy: (Math.random() - 0.5) * 0.25,
+          r: Math.random() * 1.4 + 0.6,
+          isAgent: Math.random() < 0.12 // ~12% are "agent" highlights
+        });
+      }
+    }
+
+    let mouseX = -1000, mouseY = -1000;
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+    });
+    canvas.addEventListener('mouseleave', () => {
+      mouseX = -1000; mouseY = -1000;
+    });
+
+    function step() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Update positions
+      for (const n of nodes) {
+        n.x += n.vx;
+        n.y += n.vy;
+        if (n.x < 0 || n.x > width) n.vx *= -1;
+        if (n.y < 0 || n.y > height) n.vy *= -1;
+
+        // Mouse attraction
+        const dxm = mouseX - n.x;
+        const dym = mouseY - n.y;
+        const dm = Math.sqrt(dxm * dxm + dym * dym);
+        if (dm < 200) {
+          n.x += dxm * 0.0008;
+          n.y += dym * 0.0008;
+        }
+      }
+
+      // Draw connections
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const a = nodes[i], b = nodes[j];
+          const dx = a.x - b.x, dy = a.y - b.y;
+          const d = Math.sqrt(dx * dx + dy * dy);
+          if (d < CONNECT_DIST) {
+            const opacity = (1 - d / CONNECT_DIST) * 0.22;
+            const useGold = a.isAgent || b.isAgent;
+            ctx.strokeStyle = (useGold ? GOLD : BLUE) + opacity + ')';
+            ctx.lineWidth = 0.6;
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw nodes
+      for (const n of nodes) {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        if (n.isAgent) {
+          ctx.fillStyle = 'rgba(232, 198, 129, 0.95)';
+          // glow
+          const grad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, 12);
+          grad.addColorStop(0, 'rgba(232, 198, 129, 0.4)');
+          grad.addColorStop(1, 'rgba(232, 198, 129, 0)');
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, 12, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = 'rgba(232, 198, 129, 0.95)';
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r + 0.6, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.fillStyle = 'rgba(180, 195, 220, 0.55)';
+          ctx.fill();
+        }
+      }
+
+      requestAnimationFrame(step);
+    }
+
+    window.addEventListener('resize', () => {
+      resize();
+    });
+
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      init();
+      step();
+    } else {
+      // Static fallback
+      init();
+      step();
+    }
+  })();
+
+  /* ---------- Scroll-in fade ---------- */
+  (function () {
+    const els = document.querySelectorAll('.fade-in');
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(el => el.classList.add('visible'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    els.forEach(el => io.observe(el));
+  })();
+</script>
+
+</body>
+</html>
